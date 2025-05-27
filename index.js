@@ -1,11 +1,16 @@
 import express from "express";
 import testRouter from "./routes/testRoutes.js";
 import userRouter from "./routes/user/userRoutes.js";
+import authRoutes from "./routes/auth/authRoutes.js";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 
 const PORT = process.env.PORT || 4000;
+
+app.use(express.json()); //Without it, req.body will be undefined. IT parses JSON
+app.use(express.urlencoded({ extended: true })); //Without it, req.body will be undefined. IT parses FORM DATA, ALSO
+// extended: true →  uses the qs library (allows nested objects like { user: { name: "John" } })
 
 // app.use("/", (req, res, next) => {
 //   res.send("I am app.use");
@@ -20,6 +25,8 @@ app.get("/test", (req, res) => {
 });
 
 app.use(testRouter); //this will make /test route available
+
+app.use("/auth", authRoutes);
 
 app.use("/dev", testRouter); ////this will make /dev/test route available
 
